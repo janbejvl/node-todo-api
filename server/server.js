@@ -20,6 +20,16 @@ app.post('/todos', (req, res) => {
   })
 })
 
+app.get('/todos', (req, res) => {
+  const todos = Todo.find().then((todos) => {
+    res.send({todos})
+  }).catch((e) => {
+    res.status(400).send(e)
+  })
+
+
+})
+
 
 app.listen(3000, () => {
   console.log('Server is live on port 3000');
