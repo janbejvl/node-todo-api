@@ -82,10 +82,12 @@ UserSchema.statics = {
       
       return new Promise((resolve, reject) => {
         bcrypt.compare(password, user.password, (err, res) => {
-          if (err) {
+          if (res) {
+            resolve(user)
+          }
+          else {
             reject()
           }
-          resolve(user)
         })
       })
       
