@@ -12,6 +12,7 @@ const UserSchema = new mongoose.Schema({
     trim: true,
     unique: true,
     validate: {
+      isAsync: true,
       validator: validator.isEmail,
       message: '{VALUE} is not a valid email'
     }
@@ -70,6 +71,25 @@ UserSchema.statics = {
       'tokens.token': token,
       'tokens.access': 'auth'
     })
+  },
+  findByCreadentials: function(email, password) {
+    const User = this
+
+    return User.findOne({ email }).then((user) => {
+      if (!user) {
+        return Promise.reject()
+      }
+      
+      return new Promise((resolve, reject) => {
+        bcrypt.compare(password, user.password, (err, res) => {
+          if (err) {
+            reject()
+          }
+          resolve(user)
+        })
+      })
+      
+    })      
   }
 }
 
